@@ -33,6 +33,56 @@ player2 = pygame.image.load('player2.png')
 bullets1 = []
 bullets2 = []
 
+class shell1:
+    """Класс снарядов первого игрока."""
+
+    def __init__(self, x1, y1, radius, color, facing):
+        """
+        Конструктор принимает следующие параметры:
+
+        x1, y1 - координаты снаряда первого игрока
+        radius - радиус снаряда
+        color - цвет снаряда
+        facing - направление снаряда
+        vel1 - скорость снаряда
+        """
+
+        self.x1 = x1
+        self.y1 = y1
+        self.radius = radius
+        self.color = color
+        self.facing1 = facing
+        self.vel1 = 12 * facing
+
+    def draw(self, display1):
+        """Функция отрисовывает снаряды перрого игрка на экране."""
+        pygame.draw.circle(display1, self.color, (self.x1, self.y1), self.radius)
+
+
+class shell2:
+    """Класс снарядов второго игрока."""
+
+    def __init__(self, x2, y2, radius, color, facing):
+        """Конструктор принимает следующие параметры:
+
+        x2, y2 - координаты снаряда второго игрока
+        radius - радиус снаряда
+        color - цвет снаряда
+        facing - направление снаряда
+        vel2 - скорость снаряда
+        """
+
+        self.x2 = x2
+        self.y2 = y2
+        self.radius = radius
+        self.color = color
+        self.facing2 = facing
+        self.vel2 = 10 * facing
+
+    def draw(self, display2):
+        """Функция отрисовывает снаряды второго игрка на экране."""
+        pygame.draw.circle(display2, self.color, (self.x2, self.y2), self.radius)
+
 
 def print_text(message, x, y, font_color=(255, 255, 255), font_type='fonts/font.ttf', font_size=40):
     """
