@@ -185,6 +185,36 @@ def stop_game():
 
         pygame.display.update()
         clock.tick(15)
+        
+        
+ def Bullet1():
+    """Функция регистрирует попадание снаряда в игрока, убирает снаряд с дисплея и убавляет здоровье."""
+    global health2
+    for bullet1 in bullets1:
+        if 1200 > bullet1.x1 > 0:
+            bullet1.x1 += bullet1.vel1
+        else:
+            bullets1.pop(bullets1.index(bullet1))
+
+        if player2_x <= bullet1.x1 <= player2_x + player2_width and \
+                player2_y <= bullet1.y1 <= player2_y + player2_height:
+            bullets1.pop(bullets1.index(bullet1))
+            health2 -= 10
+
+
+def Bullet2():
+    global health1
+    for bullet2 in bullets2:
+        if 1200 > bullet2.x2 > 0:
+            bullet2.x2 += bullet2.vel2
+        else:
+            bullets2.pop(bullets2.index(bullet2))
+
+        if player1_x <= bullet2.x2 <= player1_x + player1_width and \
+                player1_y <= bullet2.y2 <= player1_y + player1_height:
+            bullets2.pop(bullets2.index(bullet2))
+            health1 -= 10
+
 
 
 
