@@ -83,6 +83,24 @@ class shell2:
         """Функция отрисовывает снаряды второго игрка на экране."""
         pygame.draw.circle(display2, self.color, (self.x2, self.y2), self.radius)
 
+        
+ def draw_display():
+    """Функция отрисовывает основные объекты игры, то есть задний фон, игроки, снаряды и разделительная полоса."""
+    display.blit(background, (0, 0))
+    display.blit(player1, (player1_x, player1_y))
+    display.blit(player2, (player2_x, player2_y))
+
+    pygame.draw.line(display, (255, 255, 255), (600, 0), (600, 752), 1)
+
+    for BULLET1 in bullets1:
+        BULLET1.draw(display)
+
+    for BULLET2 in bullets2:
+        BULLET2.draw(display)
+
+    pygame.display.update()
+
+
 
 def print_text(message, x, y, font_color=(255, 255, 255), font_type='fonts/font.ttf', font_size=40):
     """
