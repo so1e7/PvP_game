@@ -270,13 +270,13 @@ def run_game():
 
         if health2 == 0 and health1 == 0:
             print_text('Ничья!', 550, 376)
-            stop_game()
+            return stop_game()
         elif health2 == 0 and health1 != 0:
             print_text('Победил капитан оранжевого корабля!', 350, 376)
-            stop_game()
+            return stop_game()
         elif health2 != 0 and health1 == 0:
             print_text('Победил капиан белого корабля!', 350, 376)
-            stop_game()
+            return stop_game()
 
         """Переменная, запоминающая клавишы, которые нажал пользователь."""
         keys = pygame.key.get_pressed()
