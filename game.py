@@ -202,7 +202,7 @@ def stop_game():
             health2 -= 10
 
 
-def Bullet2():
+ def Bullet2():
     global health1
     for bullet2 in bullets2:
         if 1200 > bullet2.x2 > 0:
@@ -214,6 +214,82 @@ def Bullet2():
                 player1_y <= bullet2.y2 <= player1_y + player1_height:
             bullets2.pop(bullets2.index(bullet2))
             health1 -= 10
+            
+ def run_game():
+    """Игровой цикл, который продолжается, пока пользователь не закончит игру или не выйдет из нее."""
+    global player1_x, player1_y, player2_x, player2_y, cool_down1, cool_down2, health1, health2
+    game = True
+
+    while game:
+        pygame.time.delay(50)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        Bullet1()
+        Bullet2()
+
+        draw_display()
+
+        print_text('HP: ' + str(health1), 1050, 20)
+        print_text('HP: ' + str(health2), 50, 20)
+
+        if health2 == 0 and health1 == 0:
+            print_text('Ничья!', 550, 376)
+            stop_game()
+        elif health2 == 0 and health1 != 0:
+            print_text('Победил капитан оранжевого корабля!', 350, 376)
+            stop_game()
+        elif health2 != 0 and health1 == 0:
+            print_text('Победил капиан белого корабля!', 350, 376)
+            stop_game()
+
+        """Переменная, запоминающая клавишы, которые нажал пользователь."""
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_ESCAPE]:
+            pause_game()
+
+        if keys[pygame.K_p]:
+            facing1 = -1
+            if not cool_down1:
+                if len(bullets1) < 5:
+                    bullets1.append(shell1(round(player1_x), round(player1_y + player1_height // 2),
+                                           5, (255, 0, 0), facing1))
+                    cool_down1 = 3
+            else:
+                cool_down1 -= 1
+
+        if keys[pygame.K_RIGHT] and player1_x < 1200 - player1_width - 5:
+            player1_x += 5
+        if keys[pygame.K_LEFT] and player1_x > 600:
+            player1_x -= 5
+        if keys[pygame.K_UP] and player1_y > 5:
+            player1_y -= 5
+        if keys[pygame.K_DOWN] and player1_y < 752 - player1_height - 5:
+            player1_y += 5
+
+        if keys[pygame.K_f]:
+            facing2 = 1
+            if not cool_down2:
+                if len(bullets2) < 5:
+                    bullets2.append(shell2(round(player2_x + player2_width), round(player2_y + player2_height // 2),
+                                           5, (0, 255, 0), facing2))
+                    cool_down2 = 3
+            else:
+                cool_down2 -= 1
+        if keys[pygame.K_a] and player2_x > 5:
+            player2_x -= 10
+        if keys[pygame.K_d] and player2_x < 600 - player2_width - 5:
+            player2_x += 10
+        if keys[pygame.K_w] and player2_y > 5:
+            player2_y -= 10
+        if keys[pygame.K_s] and player2_y < 752 - player2_height - 5:
+            player2_y += 10
+
+        pygame.display.update()
+        clock.tick(30)
+
 
 
 
