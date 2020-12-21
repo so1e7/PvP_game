@@ -1,0 +1,194 @@
+import pygame
+
+pygame.init()
+
+display_width = 1200
+display_height = 752
+
+display = pygame.display.set_mode((display_width, display_height))
+pygame.display.set_caption('Стреляй или умри!')
+
+'''Параметры первого(оранжевого корабля) игрока.'''
+player1_width = 90
+player1_height = 120
+player1_x = 1050
+player1_y = 120
+health1 = 100
+cool_down1 = 0
+
+'''Параметры второго(белого корабля) игрока.'''
+player2_width = 90
+player2_height = 90
+player2_x = 70
+player2_y = 500
+health2 = 100
+cool_down2 = 0
+
+clock = pygame.time.Clock()
+
+background = pygame.image.load('bg.jpg')
+player1 = pygame.image.load('player1.png')
+player2 = pygame.image.load('player2.png')
+
+bullets1 = []
+bullets2 = []
+
+
+def print_text(message, x, y, font_color=(255, 255, 255), font_type='fonts/font.ttf', font_size=40):
+    """
+    Функция, которая печатает текст на экране.
+
+    message - текст, который будет выведен на экрна
+    x, y - координаты, в которых будет напечатано сообщение
+    font_color - цвет текста
+    font_type - шрифт текста
+    font_size - размер текста
+    """
+    font_type = pygame.font.Font(font_type, font_size)
+    text = font_type.render(message, True, font_color)
+    display.blit(text, (x, y))
+
+
+def pause_game():
+    """Функция, которая ставит игру на паузу при нажатии кнопки ESC."""
+    paused = True
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        print_text('ПАУЗА', 530, 300)
+        print_text('Нажмите ENTER, чтобы продолжить игру', 320, 376)
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RETURN]:
+            paused = False
+
+        pygame.display.update()
+        clock.tick(15)
+
+
+class Button:
+    """
+    Класс кнопок, которые создаются на дисплее.
+    Класс включает в себя функции, которые отвечают за отрисовку кнопки
+    """
+
+    def __init__(self, width, height):
+        """
+        Конструктор принимает параметры кнопки.
+
+        width - ширина кнопки
+        height - высота кнопки
+        default_color - цвет заполнения кнопки
+        effects - параметр, отвечающий за эффект заполнения кнопки цветом
+        rect_width - ширина кнопки
+        rect_height - высота кнопки, пока пользователь не наведет на нее
+        clear - параметр, отвечающий за очищение эффекта заполнения кнопки цветом
+        """
+        self.width = width
+        self.height = height
+        self.default_color = (32, 68, 71)
+        self.effects = False
+        self.rect_height = 0
+        self.rect_width = width
+        self.clear = False
+
+    def draw_normal_rect(self, mouse_x, mouse_y, x, y):
+        """
+        Функция, которая добавляет эффект отрисовки кнпоки, при наведении на нее курсором мышки.
+
+        mouse_x - координата X курсора мыши
+        mouse_y - координата Y курсора мыши
+        x, y - координаты X и Y кнопки
+        """
+        if x <= mouse_x <= x + self.width and y <= mouse_y <= y + self.height:
+            self.effects = True
+
+        if self.effects:
+            if mouse_x < x or mouse_x > x + self.width or mouse_y < y or y > y + self.height:
+                self.clear = True
+                self.effects = False
+
+            if self.rect_height < self.height:
+                self.rect_height += (self.height - 10) / 40
+
+        if self.clear and not self.effects:
+            if self.rect_height > 0:
+                self.rect_height -= (self.height - 10) / 40
+            else:
+                self.clear = False
+
+        draw_y = y + self.height - self.rect_height
+        pygame.draw.rect(display, self.default_color, (x, draw_y, self.rect_width, self.rect_height))
+
+    def draw_button(self, x, y, message, action=None, font_size=30):
+        """
+        Функция, которая отрисовывает кнопку на экране.
+
+        x, y - координаты X и Y, где будет нарисована кнопка
+        message - сообщение, которое будет печаться на кнопке
+        action - дейстиве, которое будет выполняться по этой кнопке
+        font_size - размер шрифта
+        """
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+
+        if x < mouse[0] < x + self.width and y < mouse[1] < y + self.height:
+            if click[0] == 1 and action is not None:
+                if action == quit:
+                    pygame.quit()
+                    quit()
+                else:
+                    action()
+
+        self.draw_normal_rect(mouse[0], mouse[1], x, y)
+        print_text(message=message, x=x + 10, y=y + 10, font_size=font_size)
+
+
+def menu():
+    """Функция отвечает за отрисовку начального окна, где пользователь может либо начать игру, либо выйти из нее."""
+    menu_bg = pygame.image.load('menu.jpg')
+    play_button = Button(210, 90)
+    exit_button = Button(190, 90)
+    show = True
+    while show:
+        pygame.time.delay(50)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        display.blit(menu_bg, (0, 0))
+
+        play_button.draw_button(500, 240, 'Играть', start_game, 70)
+        exit_button.draw_button(510, 380, 'Выход', quit, 70)
+
+        pygame.display.update()
+        clock.tick(60)
+
+
+def start_game():
+    """Функция, которая запускает игровой цикл."""
+    run_game()
+
+
+def stop_game():
+    """Функция, которая останавливает игру после победы игрока."""
+    stopped = True
+    while stopped:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+        pygame.display.update()
+        clock.tick(15)
+
+
+
+if __name__ == "__main__":
+    menu()
+    pygame.quit()
+    quit()
