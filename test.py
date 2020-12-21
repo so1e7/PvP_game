@@ -1,16 +1,23 @@
+import game
+
 import unittest
+from unittest.mock import patch
 import pygame
 
-from game import Bullet1, Bullet2, start_game, bullets2, bullets1
 
-display = pygame.display.set_mode((1200, 752))
-
-
-class GameTest(unittest.TestCase):
-
-    def test_bullet(self):
-        self.assertEqual(Bullet2(), 2)
-
+class GameTests(unittest.TestCase):
+    
+    @patch('pygame.key.get_pressed')
+    @patch('game.pause_game')
+    def test_exit_game(self, patch_pause, patch_keys):
+        """Проверяем, работает ли пауза."""
+        patch_keys.return_value = {pygame.K_ESCAPE : True, pygame.K_RETURN : False}
+        patch_pause.return_value = 'paused'
+        try:
+            game.run_game()
+        except KeyError as e:
+            pass
+        self.assertTrue(patch_pause.called)
 
 if __name__ == "__main__":
     unittest.main()
