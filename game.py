@@ -83,24 +83,6 @@ class shell2:
         """Функция отрисовывает снаряды второго игрка на экране."""
         pygame.draw.circle(display2, self.color, (self.x2, self.y2), self.radius)
 
-        
- def draw_display():
-    """Функция отрисовывает основные объекты игры, то есть задний фон, игроки, снаряды и разделительная полоса."""
-    display.blit(background, (0, 0))
-    display.blit(player1, (player1_x, player1_y))
-    display.blit(player2, (player2_x, player2_y))
-
-    pygame.draw.line(display, (255, 255, 255), (600, 0), (600, 752), 1)
-
-    for BULLET1 in bullets1:
-        BULLET1.draw(display)
-
-    for BULLET2 in bullets2:
-        BULLET2.draw(display)
-
-    pygame.display.update()
-
-
 
 def print_text(message, x, y, font_color=(255, 255, 255), font_type='fonts/font.ttf', font_size=40):
     """
@@ -214,7 +196,7 @@ class Button:
         self.draw_normal_rect(mouse[0], mouse[1], x, y)
         print_text(message=message, x=x + 10, y=y + 10, font_size=font_size)
 
-
+        
 def menu():
     """Функция отвечает за отрисовку начального окна, где пользователь может либо начать игру, либо выйти из нее."""
     menu_bg = pygame.image.load('menu.jpg')
@@ -255,7 +237,7 @@ def stop_game():
         clock.tick(15)
         
         
- def Bullet1():
+def Bullet1():
     """Функция регистрирует попадание снаряда в игрока, убирает снаряд с дисплея и убавляет здоровье."""
     global health2
     for bullet1 in bullets1:
@@ -269,8 +251,7 @@ def stop_game():
             bullets1.pop(bullets1.index(bullet1))
             health2 -= 10
 
-
- def Bullet2():
+def Bullet2():
     global health1
     for bullet2 in bullets2:
         if 1200 > bullet2.x2 > 0:
@@ -283,7 +264,7 @@ def stop_game():
             bullets2.pop(bullets2.index(bullet2))
             health1 -= 10
             
- def run_game():
+def run_game():
     """Игровой цикл, который продолжается, пока пользователь не закончит игру или не выйдет из нее."""
     global player1_x, player1_y, player2_x, player2_y, cool_down1, cool_down2, health1, health2
     game = True
@@ -358,11 +339,8 @@ def stop_game():
         pygame.display.update()
         clock.tick(30)
 
-
-
-
-
 if __name__ == "__main__":
     menu()
     pygame.quit()
     quit()
+    
